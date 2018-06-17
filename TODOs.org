@@ -1,4 +1,15 @@
 
-*** TODO https                                                      :traefik:
-*** TODO glusterfs sur les serveurs
-*** TODO vault
+* TODO lb sur les trafiks
+  tester le module lb de gcp http
+
+* TODO configurer le dns sur le front lb en ip fixe ?
+    
+* TODO vault 
+  voir le module terraform vault si il y a de la persistance
+
+* TODO https                                                        :traefik:
+
+
+* TODO glusterfs sur les serveurs ?
+
+
