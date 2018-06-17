@@ -1,0 +1,21 @@
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+
+[web]
+  address = ":8080"
+
+[consulCatalog]
+  endpoint = "127.0.0.1:8500"
+  watch = true
+  domain = "staging.cloud.courseur.com"
+  prefix = "traefik"
+  constraints = ["tag==exposed"]

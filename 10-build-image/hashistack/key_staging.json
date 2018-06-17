@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "courseur-staging",
+  "private_key_id": "3deb152f00b92d4ca3724242446994c9a9c4fd3a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEuwIBADANBgkqhkiG9w0BAQEFAASCBKUwggShAgEAAoIBAQDef0CIgkp8H/Vt\no2AtYfrYUrpxuPNbd3DlEO9OC5YXRj2BkLMAcHYlgorN9bFmivb8RWiZmY8KkMC/\npzAcinCiPfJsBhIotRNZ0tKs5dTRUNcs0sbAxmVZBqdod4VqWuM6NXiolFKuvi8z\nM0WUQOrHfvilaMXJ/GX5xy2QYm9QBp/cvD5L9sNcU0lg8eK7RLChoYcNycRsfbuD\ntrMYPbZOY44CK92ps9O8wGErXUSmpN5Awvl4aLwqxoylzI6Gtv0t1TRqCOdjCwtz\nUSpSaHyIi5BycVh077WQtrTW4/OG+eYC6omlGLXqgFPRc1ejD4KoX1I8VQxWOXr9\ne5oeVhrXAgMBAAECgf9r8bcqHNjS+RSytfbzQMkLw+Pjrtcu7108kZRU4n1VM76j\nUJBUP9UR90NgQmxoU2mALcX38lTZy2CEzf5WQNP94nZT8jep7pYOZG0EqBX+Q9O6\nhO5OmFiTC6dfoQNMYsva2BZLTN2dHKfJla/41rkQ3SKRg6mk7pu9+Rch9Wxx/3bH\nlkOvKaCs2ZR/GOS0v0kYO9mwdx/Ii5iiQ/Q+ApK197jERoLCe/igTXr4v66VaGNJ\nqQryzbgx6/fUHC4Kfl/CarnZ5bwsBl17eIdcFm1urz4dlSIm7wYV4ieC2Q6jMp+G\nJNtKiqbVmCW9ECC49mzaOMLAwqsqEIpwn3/Bf5ECgYEA8CfPQ6yYoMD3OrNPFNX0\nkqjGoBgj211/MGgdNkjSRqwzUbbbVTZIBzaHnZUcKgKMe6p6uwUHDUKjtYMteN5E\nwTCkzKBcddcV1Fh7KDxK0Fm4zPrWwRH/ELf42HtadyCrGxK0KAJKOHcgLNz/qaoP\njKYIdazB6agcsJxrm6OVgjkCgYEA7S0xu2c/ZiLTfhfVh8736lsiVS+JBqOrUDNh\n3DpDatmM7AsC31xYkO8wtj35rR/+eRA0mYmMAPHx3C89XeaK8AcZ9+5QivZl4smN\nBOi8aScsEI45nUrkU5ifr29R5is+lyhYOZOOtfoVKZEUul6i5yM4vbHz94zb2j2v\nPmuBRY8CgYBBO+8XCOkksYX2kgJnPH8E34eksSn8SndkJMPanQlRXTFLfwoxKV+D\nZhKMgZZ26t5SMUrJRmJV/cYOZiWR8X5no9kAJIc5E0XAupApq8b+tYB3XaO8KjFI\nz1BvLYKzXVJdNkVtoMGceO9qgFWKNsGmiOs/W8AIwjuY1cR9MIBKMQKBgQDRC9id\nuS8kMuX+abuHbGEPaywjsTYxZ+kDU4aZubDaaM3Q7xOlE5vsgyaIOq/qbBy7UBFM\nkvOXkaj/zZNlRGKJlXjKEn9jPDIpZkSpYwlOFXy9St51SSFenVOCKbgiC1Orn5/D\nf891jetBK+L9MZSb7WuBp2vFcZ4GCgCAH/lc+QKBgCXt10cMYwOHzOnQcbO9giXC\nzIewucPeD+BnO5k2ry0QGTo8Ira81VCVWhx+x85HGFlf4B1SCRIkxSgcWDU3/Gbe\njRILC/Cu/2srnNZR5cWMXYXexfvFTQDCcrzny0oe9wTuZ9BRWgRy28dAEuP/Z8+u\ngH+JUaX2DElge8QElrTe\n-----END PRIVATE KEY-----\n",
+  "client_email": "courseur-staging@courseur-staging.iam.gserviceaccount.com",
+  "client_id": "116229399688821014391",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/courseur-staging%40courseur-staging.iam.gserviceaccount.com"
+}

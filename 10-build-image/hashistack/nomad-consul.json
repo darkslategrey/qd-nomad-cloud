@@ -1,0 +1,162 @@
+{
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "stop_apt.sh"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "git clone --branch {{user `bash_commons_version`}} https://github.com/gruntwork-io/bash-commons.git /tmp/bash-commons",
+                "sudo mkdir -p /opt/gruntwork",
+                "sudo cp -r /tmp/bash-commons/modules/bash-commons/src /opt/gruntwork/bash-commons"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "traefik-scripts/install-traefik/install-traefik",
+            "destination": "/tmp/install-traefik"
+        },
+        {
+            "type": "file",
+            "source": "traefik-scripts/run-traefik/run-traefik",
+            "destination": "/tmp/run-traefik"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo wget -P /usr/bin https://github.com/containous/traefik/releases/download/{{user `traefik_version`}}/traefik_linux-amd64",
+                "sudo mv /usr/bin/traefik_linux-amd64 /usr/bin/traefik",
+                "sudo chmod +x /usr/bin/traefik",
+                "sudo mkdir -p /opt/traefik/bin",
+                "sudo mv /tmp/*traefik /opt/traefik/bin"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "/opt/traefik/bin/install-traefik"
+            ]
+        },
+        {
+            "type": "shell-local",
+            "inline": [
+                "git clone --branch {{user `nomad_module_version`}} git@bitbucket.org:courseur/terraform-google-nomad.git /tmp/terraform-google-nomad",
+                "cd /tmp/terraform-google-nomad && git archive --format tgz -o /tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz HEAD",
+                "rm -rf /tmp/terraform-google-nomad"
+            ]
+        },
+        {
+            "type": "file",
+            "generated": true,
+            "source": "/tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz",
+            "destination": "/tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "mkdir /tmp/terraform-google-nomad",
+                "tar zxvf /tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz -C /tmp/terraform-google-nomad",
+                "/tmp/terraform-google-nomad/modules/install-nomad/install-nomad --version {{user `nomad_version`}}"
+           ],
+            "pause_before": "30s"
+        },
+        {
+            "type": "shell-local",
+            "inline": [
+                "git clone --branch {{user `consul_module_version`}} git@bitbucket.org:courseur/terraform-google-consul.git /tmp/terraform-google-consul",
+                "cd /tmp/terraform-google-consul && git archive --format tgz -o /tmp/terraform-google-consul-{{user `consul_module_version`}}.tgz HEAD",
+                "rm -rf /tmp/terraform-google-consul"
+            ]
+        },
+        {
+            "type": "file",
+            "generated": true,
+            "source": "/tmp/terraform-google-consul-{{user `consul_module_version`}}.tgz",
+            "destination": "/tmp/terraform-google-consul-{{user `consul_module_version`}}.tgz"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "mkdir /tmp/terraform-google-consul",
+                "tar zxvf /tmp/terraform-google-consul-{{user `consul_module_version`}}.tgz -C /tmp/terraform-google-consul",
+                "/tmp/terraform-google-consul/modules/install-consul/install-consul --version {{user `consul_version`}}",
+                "/tmp/terraform-google-consul/modules/install-dnsmasq/install-dnsmasq"
+            ],
+            "pause_before": "30s"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "git clone --branch {{user `vault_module_version`}} https://github.com/hashicorp/terraform-google-vault.git /tmp/terraform-google-vault",
+                "/tmp/terraform-google-vault/modules/install-vault/install-vault --version {{user `vault_version`}}"
+            ]
+        },
+        {
+            "inline": [
+                "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
+                "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\""
+            ],
+            "type": "shell",
+            "pause_before": "30s"
+        },
+        {
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt-get install -y docker-ce",
+                "sudo apt-get install -y git"
+            ],
+            "type": "shell",
+            "pause_before": "10s"
+
+        },
+        {
+            "type": "file",
+            "source": "docker-auth.sh",
+            "destination": "/tmp/docker-auth.sh"
+        },
+        {
+            "type": "shell",
+            "inline": ["sudo mv /tmp/docker-auth.sh /usr/local/bin"]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo systemctl enable apt-daily.service",
+                "sudo systemctl enable apt-daily.timer",
+                "sudo systemctl daemon-reload"
+            ]
+        }
+    ],
+    "builders": [
+        {
+            "ssh_username": "ubuntu",
+            "zone": "{{user `zone`}}",
+            "source_image_family": "ubuntu-1604-lts",
+            "project_id": "{{user `project_id`}}",
+            "image_family": "ubuntu-1604-lts",
+            "image_name": "hashistack-courseur-v1",
+            "type": "googlecompute"
+        }
+    ],
+    "variables": {
+        "zone": "europe-west4-b",
+        "project_id": "{{env `GOOGLE_PROJECT`}}",
+
+        "vault_version": "0.10.1",
+        "consul_version": "1.1.0",
+        "nomad_version": "0.8.3",
+        "traefik_version": "v1.6.3",
+
+        "vault_module_version": "v0.0.4",
+        "consul_module_version": "v0.0.9",
+        "nomad_module_version": "v0.2",
+
+        "gruntwork_installer_version": "v0.0.21",
+        "bash_commons_version": "v0.0.3",
+
+        "service_account": "courseur-staging@courseur-staging.iam.gserviceaccount.com",
+        "image_bucket": "eu.artifacts.courseur-staging.appspot.com"
+    },
+    "min_packer_version": "1.0.4"
+}
