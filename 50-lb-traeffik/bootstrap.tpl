@@ -6,4 +6,4 @@ exec > >(tee /var/log/startup-script.log|logger -t startup-script -s 2>/dev/cons
 
 /opt/consul/bin/run-consul --client --cluster-tag-name "${cluster_tag_name}"
 
-/opt/traefik/bin/run-traefik --domain ${domain}
+/opt/traefik/bin/run-traefik --domain "${domain}"
