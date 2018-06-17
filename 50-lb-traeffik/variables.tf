@@ -3,10 +3,10 @@ variable "region" {
 }
 
 variable "network" {
-  default = "default"
+  default = "nomad"
 }
 
-variable "subnetwork" {
+variable "subnet" {
   default = "pub"
 }
 
@@ -25,7 +25,7 @@ variable "zones" {
 }
 
 variable "instance_type" {
-  default = "g1-small"
+  default = "f1-micro"
 }
 
 variable "image" {
@@ -33,7 +33,7 @@ variable "image" {
 }
 
 variable "domain" {
-  default = "cloud.courseur.com"
+  default = "staging.cloud.courseur.com"
 }
 
 variable "cluster_tag_name" {

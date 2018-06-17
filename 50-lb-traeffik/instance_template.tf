@@ -1,5 +1,5 @@
-resource "google_compute_instance_template" "traefik-http" {
-  name        = "traefik-http"
+resource "google_compute_instance_template" "http-simple" {
+  name        = "traefik-instance"
 
   tags = ["traefik", "consul-traefik", "consul-cluster"]
 
@@ -23,7 +23,8 @@ resource "google_compute_instance_template" "traefik-http" {
   }
 
   network_interface {
-    subnetwork = "${var.subnetwork}"
+    # network = "${data.google_compute_network.base.name}"
+    subnetwork = "${var.subnet}"
     access_config {}
   }
 

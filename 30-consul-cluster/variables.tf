@@ -37,7 +37,7 @@ variable "consul_server_cluster_size" {
 
 variable "consul_client_cluster_size" {
   description = "The number of nodes to have in the Consul Client example cluster. Any number of nodes is permissible, though 3 is usually enough to test.."
-  default = 6
+  default = 2
 }
 
 variable "cluster_size" {

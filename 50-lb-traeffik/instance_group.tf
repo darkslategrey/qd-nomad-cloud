@@ -5,20 +5,19 @@ resource "google_compute_health_check" "autohealing" {
   healthy_threshold   = 3
   unhealthy_threshold = 3
 
-  http_health_check {
-    request_path = "/"
+  tcp_health_check {
     port         = "80"
   }
 }
 
-# Instance group http
+# Instance group
 
-resource "google_compute_region_instance_group_manager" "traefik-http" {
+resource "google_compute_region_instance_group_manager" "http-simple" {
   count = "${length(var.deploy_region)}"
-  name = "traefik-http"
+  name = "http-simple"
 
-  base_instance_name = "traefik-http"
-  instance_template  = "${google_compute_instance_template.traefik-http.self_link}"
+  base_instance_name = "traefik-instance"
+  instance_template  = "${google_compute_instance_template.http-simple.self_link}"
   region = "${element(var.deploy_region, count.index)}"
 
   named_port {
@@ -32,11 +31,11 @@ resource "google_compute_region_instance_group_manager" "traefik-http" {
   }
 }
 
-resource "google_compute_region_autoscaler" "traefik-http" {
+resource "google_compute_region_autoscaler" "traefik" {
   count = "${length(var.deploy_region)}"
-  name   = "traefik-http"
+  name   = "traefik"
   region = "${element(var.deploy_region, count.index)}"
-  target = "${element(google_compute_region_instance_group_manager.traefik-http.*.self_link, count.index)}"
+  target = "${element(google_compute_region_instance_group_manager.http-simple.*.self_link, count.index)}"
 
   autoscaling_policy = {
     max_replicas    = 3
