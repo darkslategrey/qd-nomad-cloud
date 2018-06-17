@@ -1,0 +1,4 @@
+
+*** TODO https                                                      :traefik:
+*** TODO glusterfs sur les serveurs
+*** TODO vault

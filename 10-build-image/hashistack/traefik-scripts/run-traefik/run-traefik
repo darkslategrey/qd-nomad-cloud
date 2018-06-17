@@ -1,0 +1,310 @@
+#!/bin/bash
+# This script is used to configure and run Traefik on a Google Compute Instance.
+
+set -e
+
+readonly SUPERVISOR_CONFIG_PATH="/etc/supervisor/conf.d/run-traefik.conf"
+
+readonly COMPUTE_INSTANCE_METADATA_URL="http://metadata.google.internal/computeMetadata/v1"
+readonly GOOGLE_CLOUD_METADATA_REQUEST_HEADER="Metadata-Flavor: Google"
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_NAME="$(basename "$0")"
+
+function print_usage {
+    echo
+    echo "Usage: run-traefik [OPTIONS]"
+    echo
+    echo "This script is used to configure and run Traefik on a Google Compute Instance."
+    echo
+    echo "Options:"
+    echo
+    echo -e "  --config-dir\t\tThe path to the Traefik config folder. Optional. Default is the absolute path of '../config', relative to this script."
+    echo -e "  --data-dir\t\tThe path to the Traefik data folder. Optional. Default is the absolute path of '../data', relative to this script."
+    echo -e "  --bin-dir\t\tThe path to the folder with Traefik binary. Optional. Default is the absolute path of the parent folder of this script."
+    echo -e "  --log-dir\t\tThe path to the Traefik log folder. Optional. Default is the absolute path of '../log', relative to this script."
+    echo -e "  --user\t\tThe user to run Traefik as. Optional. Default is to use the owner of --config-dir."
+    echo -e "  --skip-traefik-config\tIf this flag is set, don't generate a Traefik configuration file. Optional. Default is false."
+    echo
+    echo "Example:"
+    echo
+    echo "  run-traefik --config-dir /custom/path/to/traefik/config"
+}
+
+function log {
+    local readonly level="$1"
+    local readonly message="$2"
+    local readonly timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+    >&2 echo -e "${timestamp} [${level}] [$SCRIPT_NAME] ${message}"
+}
+
+function log_info {
+    local readonly message="$1"
+    log "INFO" "$message"
+}
+
+function log_warn {
+    local readonly message="$1"
+    log "WARN" "$message"
+}
+
+function log_error {
+    local readonly message="$1"
+    log "ERROR" "$message"
+}
+
+# Based on code from: http://stackoverflow.com/a/16623897/483528
+function strip_prefix {
+    local readonly str="$1"
+    local readonly prefix="$2"
+    echo "${str#$prefix}"
+}
+
+function assert_not_empty {
+    local readonly arg_name="$1"
+    local readonly arg_value="$2"
+
+    if [[ -z "$arg_value" ]]; then
+        log_error "The value for '$arg_name' cannot be empty"
+        print_usage
+        exit 1
+    fi
+}
+
+# Get the value at a specific Instance Metadata path.
+function get_instance_metadata_value {
+    local readonly path="$1"
+
+    log_info "Looking up Metadata value at $COMPUTE_INSTANCE_METADATA_URL/$path"
+    curl --silent --show-error --location --header "$GOOGLE_CLOUD_METADATA_REQUEST_HEADER" "$COMPUTE_INSTANCE_METADATA_URL/$path"
+}
+
+# Get the value of the given Custom Metadata Key
+function get_instance_custom_metadata_value {
+    local readonly key="$1"
+
+    log_info "Looking up Custom Instance Metadata value for key \"$key\""
+    get_instance_metadata_value "instance/attributes/$key"
+}
+
+# Get the ID of the Project in which this Compute Instance currently resides
+function get_instance_project_id {
+    log_info "Looking up Project ID"
+    get_instance_metadata_value "project/project-id"
+}
+
+# Get the GCE Zone in which this Compute Instance currently resides
+function get_instance_zone {
+    log_info "Looking up Zone of the current Compute Instance"
+
+    # The value returned for zone will be of the form "projects/121238320500/zones/us-west1-a" so we need to split the string
+    # by "/" and return the 4th string.
+    get_instance_metadata_value "instance/zone" | cut -d'/' -f4
+}
+
+function get_instance_region {
+    # Trim the last two characters of a zone (e.g. us-west1-a) to get the region (e.g. us-west1)
+    # Head command comes from https://unix.stackexchange.com/a/215156/129208
+    get_instance_zone | head -c -3
+}
+
+# Get the ID of the current Compute Instance
+function get_instance_name {
+    log_info "Looking up current Compute Instance name"
+    get_instance_metadata_value "instance/name"
+}
+
+# Get the IP Address of the current Compute Instance
+function get_instance_ip_address {
+    local network_interface_number="$1"
+
+    # If no network interface number was specified, default to the first one
+    if [[ -z "$network_interface_number" ]]; then
+        network_interface_number=0
+    fi
+
+    log_info "Looking up Compute Instance IP Address on Network Interface $network_interface_number"
+    get_instance_metadata_value "instance/network-interfaces/$network_interface_number/ip"
+}
+
+function assert_is_installed {
+    local readonly name="$1"
+
+    if [[ ! $(command -v ${name}) ]]; then
+        log_error "The binary '$name' is required by this script but is not installed or in the system's PATH."
+        exit 1
+    fi
+}
+
+function generate_traefik_config {
+    local readonly config_dir="$4"
+    local readonly user="$5"
+    local readonly config_path="$config_dir/$TRAEFIK_CONFIG_FILE"
+
+    local instance_name=""
+    local instance_ip_address=""
+    local instance_region=""
+    local instance_zone=""
+
+    instance_name=$(get_instance_name)
+    instance_ip_address=$(get_instance_ip_address)
+    instance_region=$(get_instance_region)
+    zone=$(get_instance_zone)
+
+    local server_config=""
+    cat > "$config_path/default.toml" <<EOF
+defaultEntryPoints = ["https", "http"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+      [[entryPoints.https.tls.certificates]]
+
+[web]
+  address = ":8080"
+
+[consulCatalog]
+  endpoint = "127.0.0.1:8500"
+  watch = true
+  domain = "${domain}"
+  prefix = "traefik"
+  constraints = ["tag==exposed"]
+EOF
+}
+
+# [[entryPoints.https.tls.certificates]]
+# certFile = "tests/traefik.crt"
+# keyFile = "tests/traefik.key"
+
+function generate_supervisor_config {
+    local readonly supervisor_config_path="$1"
+    local readonly traefik_config_dir="$2"
+    local readonly traefik_data_dir="$3"
+    local readonly traefik_bin_dir="$4"
+    local readonly traefik_log_dir="$5"
+    local readonly traefik_user="$6"
+    local readonly use_sudo="$7"
+
+    log_info "The --use-sudo flag is set, so running Traefik as the root user"
+    traefik_user="root"
+
+    log_info "Creating Supervisor config file to run Traefik in $supervisor_config_path"
+    cat > "$supervisor_config_path" <<EOF
+[program:traefik]
+command=$traefik_bin_dir/traefik --configFile=$traefik_config_dir/default.toml
+stdout_logfile=$traefik_log_dir/traefik-stdout.log
+stderr_logfile=$traefik_log_dir/traefik-error.log
+numprocs=1
+autostart=true
+autorestart=true
+stopsignal=INT
+user=$traefik_user
+EOF
+}
+
+function start_traefik {
+    log_info "Reloading Supervisor config and starting Traefik"
+    supervisorctl reread
+    supervisorctl update
+}
+
+# Based on: http://unix.stackexchange.com/a/7732/215969
+function get_owner_of_path {
+    local readonly path="$1"
+    ls -ld "$path" | awk '{print $3}'
+}
+
+function run {
+    local config_dir=""
+    local data_dir=""
+    local bin_dir=""
+    local log_dir=""
+    local user=""
+    local domain=""
+    local use_sudo=""
+    local all_args=()
+
+    while [[ $# > 0 ]]; do
+        local key="$1"
+
+        case "$key" in
+            --config-dir)
+                assert_not_empty "$key" "$2"
+                config_dir="$2"
+                shift
+                ;;
+            --data-dir)
+                assert_not_empty "$key" "$2"
+                data_dir="$2"
+                shift
+                ;;
+            --bin-dir)
+                assert_not_empty "$key" "$2"
+                bin_dir="$2"
+                shift
+                ;;
+            --log-dir)
+                assert_not_empty "$key" "$2"
+                log_dir="$2"
+                shift
+                ;;
+            --user)
+                assert_not_empty "$key" "$2"
+                user="$2"
+                shift
+                ;;
+            --domain)
+                assert_not_empty "$key" "$2"
+                domain="$2"
+                shift
+                ;;
+            --help)
+                print_usage
+                exit
+                ;;
+            *)
+                log_error "Unrecognized argument: $key"
+                print_usage
+                exit 1
+                ;;
+        esac
+
+        shift
+    done
+
+    assert_not_empty "--domain" "$domain"
+
+    assert_is_installed "supervisorctl"
+    assert_is_installed "curl"
+
+    if [[ -z "$config_dir" ]]; then
+        config_dir=$(cd "$SCRIPT_DIR/../config" && pwd)
+    fi
+
+    if [[ -z "$data_dir" ]]; then
+        data_dir=$(cd "$SCRIPT_DIR/../data" && pwd)
+    fi
+
+    if [[ -z "$bin_dir" ]]; then
+        bin_dir=$(cd "$SCRIPT_DIR/../bin" && pwd)
+    fi
+
+    if [[ -z "$log_dir" ]]; then
+        log_dir=$(cd "$SCRIPT_DIR/../log" && pwd)
+    fi
+
+    if [[ -z "$user" ]]; then
+        user=$(get_owner_of_path "$config_dir")
+    fi
+
+    generate_traefik_config "$server" "$client" "$num_servers" "$config_dir" "$user"
+    generate_supervisor_config "$SUPERVISOR_CONFIG_PATH" "$config_dir" "$data_dir" "$bin_dir" "$log_dir" "$user" "$use_sudo"
+    start_traefik
+}
+
+run "$@"

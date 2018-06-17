@@ -1,0 +1,223 @@
+#!/bin/bash
+# This script can be used to install Traefik and its dependencies. This script has been tested with the following
+# operating systems:
+#
+# 1. Ubuntu 16.04
+
+set -e
+
+readonly DEFAULT_INSTALL_PATH="/opt/traefik"
+readonly DEFAULT_TRAEFIK_USER="traefik"
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SYSTEM_BIN_DIR="/usr/local/bin"
+
+readonly SUPERVISOR_DIR="/etc/supervisor"
+readonly SUPERVISOR_CONF_DIR="$SUPERVISOR_DIR/conf.d"
+
+readonly SCRIPT_NAME="$(basename "$0")"
+
+function print_usage {
+    echo
+    echo "Usage: install-traefik [OPTIONS]"
+    echo
+    echo "This script can be used to install Traefik and its dependencies. This script has been tested with Ubuntu 16.04."
+    echo
+    echo "Options:"
+    echo
+    echo -e "  --path\t\tThe path where Traefik should be installed. Optional. Default: $DEFAULT_INSTALL_PATH."
+    echo -e "  --user\t\tThe user who will own the Traefik install directories. Optional. Default: $DEFAULT_TRAEFIK_USER."
+    echo
+    echo "Example:"
+    echo
+    echo "  install-traefik"
+}
+
+function log {
+  local readonly level="$1"
+  local readonly message="$2"
+  local readonly timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  >&2 echo -e "${timestamp} [${level}] [$SCRIPT_NAME] ${message}"
+}
+
+function log_info {
+  local readonly message="$1"
+  log "INFO" "$message"
+}
+
+function log_warn {
+  local readonly message="$1"
+  log "WARN" "$message"
+}
+
+function log_error {
+  local readonly message="$1"
+  log "ERROR" "$message"
+}
+
+function assert_not_empty {
+  local readonly arg_name="$1"
+  local readonly arg_value="$2"
+
+  if [[ -z "$arg_value" ]]; then
+    log_error "The value for '$arg_name' cannot be empty"
+    print_usage
+    exit 1
+  fi
+}
+
+# Install steps are based on: http://unix.stackexchange.com/a/291098/215969
+function install_supervisord_debian {
+  log_info "Installing supervisord on Debian/Ubuntu"
+
+  sudo apt-get install -y supervisor
+  sudo update-rc.d supervisor defaults
+
+  create_supervisor_config
+  sudo systemctl enable supervisor
+}
+
+function create_supervisor_config {
+  log_info "Creating supervisord configuration file"
+  sudo mkdir -p "$SUPERVISOR_CONF_DIR"
+  sudo cp "$SCRIPT_DIR/supervisord.conf" "$SUPERVISOR_DIR/supervisord.conf"
+}
+
+function has_apt_get {
+  [[ -n "$(command -v apt-get)" ]]
+}
+
+function install_dependencies {
+  log_info "Installing dependencies"
+
+  if $(has_apt_get); then
+    sudo apt-get update -y
+    sudo apt-get install -y curl unzip jq
+    install_supervisord_debian
+  else
+    log_error "Could not find apt-get. Cannot install dependencies on this OS."
+    exit 1
+  fi
+}
+
+function user_exists {
+  local readonly username="$1"
+
+  log_info "Checking if user $username exists"
+  id "$username" >/dev/null 2>&1
+}
+
+function create_traefik_user {
+  local readonly username="$1"
+
+  if $(user_exists "$username"); then
+    log_info "User $username already exists. Will not create again."
+  else
+    log_info "Creating user named $username"
+    sudo useradd "$username"
+  fi
+}
+
+function create_traefik_install_paths {
+  local readonly path="$1"
+  local readonly username="$2"
+
+  log_info "Creating install dirs for Traefik at $path"
+  sudo mkdir -p "$path"
+  sudo mkdir -p "$path/bin"
+  sudo mkdir -p "$path/config"
+  sudo mkdir -p "$path/data"
+  sudo mkdir -p "$path/log"
+  sudo mkdir -p "$path/tls"
+
+  log_info "Changing ownership of $path to $username"
+  sudo chown -R "$username:$username" "$path"
+  if [[ -f /opt/traefik/bin/traefik ]]; then
+      log_info "Symlink /opt/traefik/bin/traefik already exists. Will not add again."
+  else
+      sudo ln -s /usr/bin/traefik /opt/traefik/bin/traefik
+  fi
+}
+
+function install_binaries {
+    local readonly version="$1"
+    local readonly path="$2"
+    local readonly username="$3"
+
+    local readonly url="https://releases.hashicorp.com/traefik/${version}/traefik_${version}_linux_amd64.zip"
+    local readonly download_path="/tmp/traefik_${version}_linux_amd64.zip"
+    local readonly bin_dir="$path/bin"
+    local readonly traefik_dest_path="$bin_dir/traefik"
+    local readonly run_traefik_dest_path="$bin_dir/run-traefik"
+
+    log_info "Downloading Traefik $version from $url to $download_path"
+    curl -o "$download_path" "$url"
+    unzip -d /tmp "$download_path"
+
+    log_info "Moving Traefik binary to $traefik_dest_path"
+    sudo mv "/tmp/traefik" "$traefik_dest_path"
+    sudo chown "$username:$username" "$traefik_dest_path"
+    sudo chmod a+x "$traefik_dest_path"
+
+    local readonly symlink_path="$SYSTEM_BIN_DIR/traefik"
+    if [[ -f "$symlink_path" ]]; then
+        log_info "Symlink $symlink_path already exists. Will not add again."
+    else
+        log_info "Adding symlink to $traefik_dest_path in $symlink_path"
+        sudo ln -s "$traefik_dest_path" "$symlink_path"
+    fi
+
+    log_info "Copying Traefik run script to $run_traefik_dest_path"
+    sudo cp "$SCRIPT_DIR/../run-traefik/run-traefik" "$run_traefik_dest_path"
+    sudo chown "$username:$username" "$run_traefik_dest_path"
+    sudo chmod a+x "$run_traefik_dest_path"
+}
+
+# For more info, see: https://www.traefikproject.io/docs/configuration/#disable_mlock
+function configure_mlock {
+    log_info "Giving Traefik permission to use the mlock syscall"
+    sudo setcap cap_ipc_lock=+ep $(readlink -f $(which traefik))
+}
+
+function install {
+    local version=""
+    local path="$DEFAULT_INSTALL_PATH"
+    local user="$DEFAULT_TRAEFIK_USER"
+
+    while [[ $# > 0 ]]; do
+        local key="$1"
+
+        case "$key" in
+            --path)
+                path="$2"
+                shift
+                ;;
+            --user)
+                user="$2"
+                shift
+                ;;
+            --help)
+                print_usage
+                exit
+                ;;
+            *)
+                log_error "Unrecognized argument: $key"
+                print_usage
+                exit 1
+                ;;
+        esac
+
+        shift
+    done
+
+    assert_not_empty "--path" "$path"
+    assert_not_empty "--user" "$user"
+
+    log_info "Starting Traefik install"
+
+    create_traefik_user "$user"
+    create_traefik_install_paths "$path" "$user"
+
+    log_info "Traefik install complete!"
+}
+install "$@"
