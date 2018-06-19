@@ -23,6 +23,11 @@
             "destination": "/tmp/run-traefik"
         },
         {
+            "type": "file",
+            "source": "tls.tar.gz",
+            "destination": "/tmp/traefik-tls.tar.gz"
+        },
+        {
             "type": "shell",
             "inline": [
                 "sudo wget -P /usr/bin https://github.com/containous/traefik/releases/download/{{user `traefik_version`}}/traefik_linux-amd64",
@@ -35,7 +40,8 @@
         {
             "type": "shell",
             "inline": [
-                "/opt/traefik/bin/install-traefik"
+                "/opt/traefik/bin/install-traefik",
+                "sudo tar zxf /tmp/traefik-tls.tar.gz -C /opt/traefik"
             ]
         },
         {
@@ -135,7 +141,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v1",
+            "image_name": "hashistack-courseur-v2",
             "type": "googlecompute"
         }
     ],
