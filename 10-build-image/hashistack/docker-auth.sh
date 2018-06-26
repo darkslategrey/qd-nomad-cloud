@@ -9,7 +9,7 @@ curl -L "https://github.com/GoogleCloudPlatform/docker-credential-gcr/releases/d
   | tar xz --to-stdout docker-credential-gcr \
         > /usr/bin/docker-credential-gcloud && chmod +x /usr/bin/docker-credential-gcloud
 
-cd /usr/bin && ln -s docker-credential-gcloud docker-credential-gcp
+cd /usr/bin && ln -s docker-credential-gcloud docker-credential-gcr
 
 /usr/bin/docker-credential-gcloud configure-docker
 
