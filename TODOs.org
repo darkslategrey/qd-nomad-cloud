@@ -1,15 +1,22 @@
 
-* TODO lb sur les trafiks
-  tester le module lb de gcp http
+* DONE lb sur les trafiks
+  CLOSED: [2018-06-26 Tue 22:24]
+  poser un lb manage 
 
-* TODO configurer le dns sur le front lb en ip fixe ?
-    
+* DONE configurer le dns sur le front lb en ip fixe ?
+  CLOSED: [2018-06-26 Tue 22:24]
+  *.cloud.courseur.com vers le lb google
 * TODO vault 
   voir le module terraform vault si il y a de la persistance
 
-* TODO https                                                        :traefik:
+* DONE https                                                        :traefik:
+  CLOSED: [2018-06-26 Tue 22:25]
+  ajouter le tgz des certifs dans l'image
 
+* DONE glusterfs sur les serveurs ?
+  CLOSED: [2018-06-26 Tue 22:27]
+  necessaire si pas trouver d'autres solution 
+  plus simple au probleme d'acces simultanee
 
-* TODO glusterfs sur les serveurs ?
-
+* TODO limite les ips au bastion et traefiks
 
