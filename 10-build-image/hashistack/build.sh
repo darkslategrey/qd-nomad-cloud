@@ -12,6 +12,7 @@ fi
 echo iam_account $IAM_ACCOUNT project $GOOGLE_PROJECT
 
 # TODO: gives administrateur  instance compute to iam_account
-export GOOGLE_APPLICATION_CREDENTIALS=./key.json
+export GOOGLE_APPLICATION_CREDENTIALS=/home/greg/WORK/COURSEUR/devops/infra/10-build-image/hashistack/key_staging.json
+
 packer-io build -force --on-error=cleanup nomad-consul.json
 # rm key.json
