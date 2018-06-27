@@ -1,10 +1,10 @@
-resource "google_compute_instance_template" "http-simple" {
-  name        = "traefik-instance"
+resource "google_compute_instance_template" "traefik" {
+  name        = "traefik-template"
 
   tags = ["traefik", "consul-traefik", "consul-cluster"]
 
   labels = {
-    environment = "staging"
+    # ex: environment = "staging"
   }
 
   machine_type         = "${var.instance_type}"

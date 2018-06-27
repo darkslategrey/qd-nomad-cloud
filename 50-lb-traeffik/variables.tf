@@ -29,7 +29,7 @@ variable "instance_type" {
 }
 
 variable "image" {
-  default = "hashistack-courseur-v2"
+  default = "hashistack-courseur-v4"
 }
 
 variable "domain" {

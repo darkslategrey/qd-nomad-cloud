@@ -1,5 +1,5 @@
 resource "google_compute_health_check" "autohealing" {
-  name                = "autohealing-health-check"
+  name                = "traefik-check"
   check_interval_sec  = 10
   timeout_sec         = 10
   healthy_threshold   = 3
@@ -12,17 +12,17 @@ resource "google_compute_health_check" "autohealing" {
 
 # Instance group
 
-resource "google_compute_region_instance_group_manager" "http-simple" {
+resource "google_compute_region_instance_group_manager" "traefik-cluster" {
   count = "${length(var.deploy_region)}"
-  name = "http-simple"
+  name = "traefik-cluster"
 
   base_instance_name = "traefik-instance"
-  instance_template  = "${google_compute_instance_template.http-simple.self_link}"
+  instance_template  = "${google_compute_instance_template.traefik.self_link}"
   region = "${element(var.deploy_region, count.index)}"
 
   named_port {
     name = "http"
-    port = 80
+    port = 443
   }
 
   auto_healing_policies {
@@ -33,9 +33,9 @@ resource "google_compute_region_instance_group_manager" "http-simple" {
 
 resource "google_compute_region_autoscaler" "traefik" {
   count = "${length(var.deploy_region)}"
-  name   = "traefik"
+  name   = "traefik-scaler"
   region = "${element(var.deploy_region, count.index)}"
-  target = "${element(google_compute_region_instance_group_manager.http-simple.*.self_link, count.index)}"
+  target = "${element(google_compute_region_instance_group_manager.traefik-cluster.*.self_link, count.index)}"
 
   autoscaling_policy = {
     max_replicas    = 3
