@@ -1,6 +1,6 @@
-resource "google_compute_address" "traefik" {
+resource "google_compute_global_address" "traefik" {
   name = "traefik"
-  region = "${var.region}"
+  # region = "${var.region}"
 }
 
 resource "google_compute_address" "bastion" {
