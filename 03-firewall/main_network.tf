@@ -2,7 +2,7 @@
 
 resource "google_compute_firewall" "icmp" {
   name    = "icmp"
-  network = "${google_compute_network.nomad.name}"
+  network = "${var.network}"
 
   allow {
     protocol = "icmp"
@@ -13,7 +13,7 @@ resource "google_compute_firewall" "icmp" {
 
 resource "google_compute_firewall" "ssh" {
   name    = "ssh"
-  network = "${google_compute_network.nomad.name}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -25,7 +25,7 @@ resource "google_compute_firewall" "ssh" {
 
 resource "google_compute_firewall" "bastion_nat" {
   name    = "bastion-nat"
-  network = "${google_compute_network.nomad.name}"
+  network = "${var.network}"
 
   allow {
     protocol = "icmp"
@@ -41,6 +41,6 @@ resource "google_compute_firewall" "bastion_nat" {
     ports    = ["1-65535"]
   }
 
-  source_tags = ["nomad-servers", "nomad-clients", "consul-servers", "consul-clients"]
+  source_tags = ["nomad-servers", "nomad-clients", "consul-servers", "consul-clients", "consul-cluster"]
   target_tags   = ["bastion"]
 }

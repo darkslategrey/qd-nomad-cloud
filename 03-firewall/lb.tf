@@ -1,6 +1,6 @@
 resource "google_compute_firewall" "dns" {
   name    = "dns"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -17,7 +17,7 @@ resource "google_compute_firewall" "dns" {
 
 resource "google_compute_firewall" "consul-servers" {
   name    = "consul-servers"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -30,12 +30,12 @@ resource "google_compute_firewall" "consul-servers" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["consul-servers"]
+  target_tags   = ["consul-servers", "consul-cluster"]
 }
 
 resource "google_compute_firewall" "consul-clients" {
   name    = "consul-clients"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -47,13 +47,13 @@ resource "google_compute_firewall" "consul-clients" {
     ports    = ["8301"]
   }
 
-  source_tags   = ["consul-servers", "consul-clients", "consul-traefik"]
+  source_tags   = ["consul-servers", "consul-clients", "consul-traefik", "consul-cluster"]
   target_tags   = ["consul-clients"]
 }
 
 resource "google_compute_firewall" "consul-traefik" {
   name    = "consul-traefik"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -65,13 +65,13 @@ resource "google_compute_firewall" "consul-traefik" {
     ports    = ["8301"]
   }
 
-  source_tags   = ["consul-servers", "consul-clients", "consul-traefik"]
+  source_tags   = ["consul-servers", "consul-clients", "consul-traefik", "consul-cluster"]
   target_tags   = ["consul-traefik"]
 }
 
 resource "google_compute_firewall" "traefik" {
   name    = "traefik"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -84,7 +84,7 @@ resource "google_compute_firewall" "traefik" {
 
 resource "google_compute_firewall" "traefik-adm" {
   name    = "traefik-adm"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"

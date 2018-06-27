@@ -1,6 +1,6 @@
 resource "google_compute_firewall" "nomad-servers" {
   name    = "nomad-servers"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -12,26 +12,28 @@ resource "google_compute_firewall" "nomad-servers" {
     ports    = ["4648"]
   }
 
+  # source_tags   = ["bastion"]
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["nomad-servers"]
+  # target_tags   = ["nomad-servers"]
+  target_tags   = ["consul-cluster"]
 }
 
 resource "google_compute_firewall" "nomad-clients" {
   name    = "nomad-clients"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
     ports    = ["4646-4647"]
   }
 
-  source_tags   = ["nomad-servers"]
+  source_tags   = ["consul-cluster"]
   target_tags   = ["nomad-clients"]
 }
 
 resource "google_compute_firewall" "nomad-apps" {
   name    = "nomad-apps"
-  network = "${data.terraform_remote_state.network.gcp_network}"
+  network = "${var.network}"
 
   allow {
     protocol = "tcp"
@@ -43,6 +45,6 @@ resource "google_compute_firewall" "nomad-apps" {
     ports    = ["20000-60000"]
   }
 
-  source_tags   = ["traefik", "nomad-clients"]
+  source_tags   = ["traefik", "nomad-clients", "consul-cluster"]
   target_tags   = ["nomad-clients"]
 }
