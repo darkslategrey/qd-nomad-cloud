@@ -112,3 +112,7 @@ variable ssl_certificates {
   description = "SSL cert self_link list. Required if `ssl` is `true` and no `private_key` and `certificate` is provided."
   default     = []
 }
+
+variable service_account_email {
+  default = "courseur-staging@courseur-staging.iam.gserviceaccount.com"
+}

@@ -45,4 +45,5 @@ module "mig1" {
   subnetwork = "${var.subnetwork}"
   startup_script    = "${data.template_file.bootstrap.rendered}"
   machine_type      = "n1-standard-1"
+  service_account_email = "${var.service_account_email}"
 }
