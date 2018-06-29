@@ -148,7 +148,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v4",
+            "image_name": "hashistack-courseur-v5",
             "type": "googlecompute"
         }
     ],

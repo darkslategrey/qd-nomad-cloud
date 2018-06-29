@@ -162,7 +162,7 @@ defaultEntryPoints = ["http", "https"]
 [retry]
 attempts = 3
 
-[web]
+[api]
 address = ":8080"
 
 [consulCatalog]
@@ -206,6 +206,9 @@ constraints = ["tag==exposed"]
         certFile = "/opt/traefik/tls/staging.cloud.courseur.com.cert.pem"
         keyFile = "/opt/traefik/tls/staging.cloud.courseur.com.privkey.pem"
         caBundleFile = "/opt/traefik/tls/staging.cloud.courseur.com.fullchain.pem"
+
+[ping]
+entryPoint = "http"
 EOF
 }
 
