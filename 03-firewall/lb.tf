@@ -48,7 +48,7 @@ resource "google_compute_firewall" "consul-clients" {
   }
 
   source_tags   = ["consul-servers", "consul-clients", "consul-traefik", "consul-cluster"]
-  target_tags   = ["consul-clients"]
+  target_tags   = ["consul-clients", "traefik", "consul-cluster"]
 }
 
 resource "google_compute_firewall" "consul-traefik" {
@@ -65,8 +65,8 @@ resource "google_compute_firewall" "consul-traefik" {
     ports    = ["8301"]
   }
 
-  source_tags   = ["consul-servers", "consul-clients", "consul-traefik", "consul-cluster"]
-  target_tags   = ["consul-traefik"]
+  source_tags   = ["consul-servers", "consul-clients", "consul-traefik", "consul-cluster", "traefik"]
+  target_tags   = ["consul-traefik", "traefik"]
 }
 
 resource "google_compute_firewall" "traefik" {
@@ -80,6 +80,19 @@ resource "google_compute_firewall" "traefik" {
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["traefik"]
+}
+
+resource "google_compute_firewall" "lb-traefik" {
+  name    = "lb-traefik"
+  network = "${var.network}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443"]
+  }
+
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  target_tags   = ["traefik", "consul-traefik", "consul-cluster"]
 }
 
 resource "google_compute_firewall" "traefik-adm" {
