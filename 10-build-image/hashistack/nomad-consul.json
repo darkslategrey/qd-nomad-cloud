@@ -64,7 +64,7 @@
                 "mkdir /tmp/terraform-google-nomad",
                 "tar zxvf /tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz -C /tmp/terraform-google-nomad",
                 "/tmp/terraform-google-nomad/modules/install-nomad/install-nomad --version {{user `nomad_version`}}"
-           ],
+            ],
             "pause_before": "30s"
         },
         {
@@ -142,14 +142,31 @@
         }
     ],
     "builders": [
+        // {
+        //     "type": "virtualbox-iso",
+        //     "guest_os_type": "Ubuntu_64",
+        //     "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.5-server-amd64.iso",
+        //     "iso_checksum": "769474248a3897f4865817446f9a4a53",
+        //     "iso_checksum_type": "md5",
+        //     "ssh_username": "packer",
+        //     "ssh_password": "packer",
+        //     "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+        // },
         {
             "ssh_username": "ubuntu",
             "zone": "{{user `zone`}}",
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v5",
+            "image_name": "hashistack-courseur-v7",
             "type": "googlecompute"
+        }
+    ],
+    "post-processors": [
+        {
+            type: "vagrant",
+            "compression_level": "4",
+            "keep_input_artifact": true
         }
     ],
     "variables": {
@@ -162,7 +179,7 @@
         "traefik_version": "v1.6.3",
 
         "vault_module_version": "v0.0.4",
-        "consul_module_version": "v0.0.9",
+        "consul_module_version": "v0.2",
         "nomad_module_version": "v0.2",
 
         "gruntwork_installer_version": "v0.0.21",

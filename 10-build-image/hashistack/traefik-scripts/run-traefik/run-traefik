@@ -193,19 +193,19 @@ constraints = ["tag==exposed"]
   [entryPoints.http]
   address = ":80"
   compress = true
-    [entryPoints.http.redirect]
-    entryPoint = "https"
-  [entryPoints.https]
-  address = ":443"
-    [entryPoints.https.tls]
-      [[entryPoints.https.tls.certificates]]
-        certFile = "/opt/traefik/tls/cloud.courseur.com.cert.pem"
-        keyFile = "/opt/traefik/tls/cloud.courseur.com.privkey.pem"
-        caBundleFile = "/opt/traefik/tls/cloud.courseur.com.fullchain.pem"
-      [[entryPoints.https.tls.certificates]]
-        certFile = "/opt/traefik/tls/staging.cloud.courseur.com.cert.pem"
-        keyFile = "/opt/traefik/tls/staging.cloud.courseur.com.privkey.pem"
-        caBundleFile = "/opt/traefik/tls/staging.cloud.courseur.com.fullchain.pem"
+  #   [entryPoints.http.redirect]
+  #   entryPoint = "https"
+  # [entryPoints.https]
+  # address = ":443"
+  #   [entryPoints.https.tls]
+  #     [[entryPoints.https.tls.certificates]]
+  #       certFile = "/opt/traefik/tls/cloud.courseur.com.cert.pem"
+  #       keyFile = "/opt/traefik/tls/cloud.courseur.com.privkey.pem"
+  #       caBundleFile = "/opt/traefik/tls/cloud.courseur.com.fullchain.pem"
+  #     [[entryPoints.https.tls.certificates]]
+  #       certFile = "/opt/traefik/tls/staging.cloud.courseur.com.cert.pem"
+  #       keyFile = "/opt/traefik/tls/staging.cloud.courseur.com.privkey.pem"
+  #       caBundleFile = "/opt/traefik/tls/staging.cloud.courseur.com.fullchain.pem"
 
 [ping]
 entryPoint = "http"
