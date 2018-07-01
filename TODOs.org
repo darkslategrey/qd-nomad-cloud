@@ -1,3 +1,9 @@
+* TODO vault 
+  voir le module terraform vault si il y a de la persistance
+
+
+* TODO Exporter l'image hashistack vers un bucket
+  pour servir de base a une virtual box
 
 * DONE lb sur les trafiks
   CLOSED: [2018-06-26 Tue 22:24]
@@ -6,9 +12,6 @@
 * DONE configurer le dns sur le front lb en ip fixe ?
   CLOSED: [2018-06-26 Tue 22:24]
   *.cloud.courseur.com vers le lb google
-* TODO vault 
-  voir le module terraform vault si il y a de la persistance
-
 * DONE https                                                        :traefik:
   CLOSED: [2018-06-26 Tue 22:25]
   ajouter le tgz des certifs dans l'image
@@ -18,5 +21,6 @@
   necessaire si pas trouver d'autres solution 
   plus simple au probleme d'acces simultanee
 
-* TODO limite les ips au bastion et traefiks
+* DONE limite les ips au bastion et traefiks
+  CLOSED: [2018-06-30 Sat 14:19]
 
