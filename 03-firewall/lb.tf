@@ -105,5 +105,5 @@ resource "google_compute_firewall" "traefik-adm" {
   }
 
   source_tags = ["bastion"]
-  target_tags   = ["traefik"]
+  target_tags   = ["traefik", "consul-cluster"]
 }
