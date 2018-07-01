@@ -37,12 +37,12 @@ resource "google_compute_firewall" "nomad-apps" {
 
   allow {
     protocol = "tcp"
-    ports    = ["20000-60000", "80", "443"]
+    ports    = ["4000-60000", "80", "443"]
   }
 
   allow {
     protocol = "udp"
-    ports    = ["20000-60000"]
+    ports    = ["4000-60000"]
   }
 
   source_tags   = ["traefik", "nomad-clients", "consul-cluster"]
