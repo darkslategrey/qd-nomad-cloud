@@ -1,3 +1,6 @@
 [submodule "terraform-google-consul"]
 	path = terraform-google-consul
 	url = git@bitbucket.org:courseur/terraform-google-consul.git
+[submodule "terraform-google-lb-http"]
+	path = terraform-google-lb-http
+	url = git@bitbucket.org:courseur/terraform-google-lb-http.git
