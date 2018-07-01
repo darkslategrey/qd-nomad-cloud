@@ -31,13 +31,13 @@ data "template_file" "bootstrap" {
 }
 
 module "mig1" {
-  source            = "github.com/GoogleCloudPlatform/terraform-google-managed-instance-group"
+  source            = "./mig_module"
   region            = "europe-west1"
   zone              = "europe-west1-b"
   
   name              = "traefik-group"
   size              = "${var.group1_size}"
-  compute_image     = "hashistack-courseur-v5"
+  compute_image     = "hashistack-courseur-v6"
   target_tags       = ["traefik", "consul-cluster"]
   service_port      = 80
   service_port_name = "http"
@@ -46,4 +46,5 @@ module "mig1" {
   startup_script    = "${data.template_file.bootstrap.rendered}"
   machine_type      = "n1-standard-1"
   service_account_email = "${var.service_account_email}"
+  automatic_restart = false
 }

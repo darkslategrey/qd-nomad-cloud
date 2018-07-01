@@ -28,7 +28,7 @@ resource "google_compute_firewall" "nomad-clients" {
   }
 
   source_tags   = ["consul-cluster"]
-  target_tags   = ["nomad-clients"]
+  target_tags   = ["nomad-clients", "consul-clients"]
 }
 
 resource "google_compute_firewall" "nomad-apps" {
@@ -46,5 +46,5 @@ resource "google_compute_firewall" "nomad-apps" {
   }
 
   source_tags   = ["traefik", "nomad-clients", "consul-cluster"]
-  target_tags   = ["nomad-clients"]
+  target_tags   = ["nomad-clients", "consul-clients"]
 }
