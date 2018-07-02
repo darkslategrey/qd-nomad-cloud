@@ -21,3 +21,7 @@ sh -x /usr/local/bin/docker-auth.sh
 (! [ -d /root/.docker ] && echo docker auth: NOK) || echo docker auth OK
 
 /opt/nomad/bin/run-nomad --client
+
+/usr/local/bin/cloud_sql_proxy -credential_file=/root/key_staging.json -dir=/cloudsql -instances=courseur-staging:europe-west2:staging-mysql &
+
+

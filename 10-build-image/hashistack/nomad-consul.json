@@ -126,6 +126,15 @@
             "inline": ["sudo mv /tmp/docker-auth.sh /usr/local/bin"]
         },
         {
+            "type": "file",
+            "source": "key_staging.json",
+            "destination": "/tmp/key_staging.json"
+        },
+        {
+            "type": "shell",
+            "inline": ["sudo mv /tmp/key_staging.json /root"]
+        },
+        {
             "type": "shell",
             "inline": [
                 "sudo wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy",
@@ -148,7 +157,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v7",
+            "image_name": "hashistack-courseur-v8",
             "type": "googlecompute"
         }
     ],
