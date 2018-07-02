@@ -1,0 +1,20 @@
+* url de l'instance
+
+```
+courseur-staging:europe-west2:staging-mysql
+```
+
+* installer le binaire 
+
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+
+
+* ajouter les fichier de credentials dans l'image de l'host
+
+* lancer le proxy sur le host
+
+/usr/local/bin/cloud_sql_proxy 
+
+/usr/local/bin/cloud_sql_proxy -credential_file=/root/key_staging.json -dir=/cloudsql -instances=courseur-staging:europe-west2:staging-mysql &
+mysql -u courseur -S /cloudsql/myProject:us-central1:myInstance2
+
