@@ -46,12 +46,12 @@ variable "cluster_size" {
 }
 
 data "google_compute_image" "hashistack" {
-  name    = "hashistack-courseur-v7"
+  name    = "hashistack-courseur-v8"
 }
 
 variable "source_image" {
   description = "The source image used to create the boot disk for a Consul Server node. Only images based on Ubuntu 16.04 LTS are supported at this time."
-  default = "hashistack-courseur-v7"
+  default = "hashistack-courseur-v8"
 }
 
 variable "consul_server_cluster_name" {
@@ -76,7 +76,7 @@ variable "consul_client_cluster_tag_name" {
 
 variable "consul_server_source_image" {
   description = "The Google Image used to launch each node in the Consul Server cluster."
-  default = "hashistack-courseur-v7"
+  default = "hashistack-courseur-v8"
   # default = "$${data.google_compute_image.hashistack.self_link}"
 }
 
