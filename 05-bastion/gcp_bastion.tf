@@ -1,9 +1,5 @@
-resource "google_compute_address" "bastion-staging-static-ip" {
-  name = "bastion-staging-static-ip"
-}
-
-resource "google_compute_instance" "bastion-staging" {
-  name         = "bastion-staging"
+resource "google_compute_instance" "bastion" {
+  name         = "bastion"
   project      = "${var.gcp_project}"
   machine_type = "${var.gcp_instance_type}"
   zone         = "${var.region_gcp}-${element(var.az_gcp, count.index)}"
@@ -26,7 +22,9 @@ resource "google_compute_instance" "bastion-staging" {
     subnetwork = "priv"
     # ${google_compute_subnetwork.priv.name}"
     access_config {
-      nat_ip = "${google_compute_address.bastion-staging-static-ip.address}"
+      nat_ip = "${data.terraform_remote_state.bastion_ip.bastion_ip}"
+      # "${google_compute_address.bastion-staging-static-ip.address}"
+      # ip_address = 
     }
   }
   metadata_startup_script = "${data.template_file.gcp_bootstrap.rendered}"
@@ -48,7 +46,7 @@ resource "google_compute_route" "nat_routing" {
   # network     = "${google_compute_network.nomad.name}"
   network = "nomad"
   next_hop_instance_zone = "${var.region_gcp}-${element(var.az_gcp, count.index)}"
-  next_hop_instance = "${google_compute_instance.bastion-staging.name}"
+  next_hop_instance = "${google_compute_instance.bastion.name}"
   priority    = 800
   tags = [
     "nomad-servers",
