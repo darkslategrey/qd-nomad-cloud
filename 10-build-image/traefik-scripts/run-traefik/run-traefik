@@ -193,11 +193,14 @@ constraints = ["tag==exposed"]
   [entryPoints.http]
   address = ":80"
   compress = true
-  #   [entryPoints.http.redirect]
-  #   entryPoint = "https"
-  # [entryPoints.https]
-  # address = ":443"
-  #   [entryPoints.https.tls]
+   [entryPoints.http.redirect]
+   entryPoint = "https"
+ [entryPoints.https]
+ address = ":443"
+ [entryPoints.https.tls]
+## Certificates do not work as is. We need a https google load balancer
+## with configured certificates
+
   #     [[entryPoints.https.tls.certificates]]
   #       certFile = "/opt/traefik/tls/cloud.courseur.com.cert.pem"
   #       keyFile = "/opt/traefik/tls/cloud.courseur.com.privkey.pem"
