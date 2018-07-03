@@ -14,14 +14,10 @@ exec > >(tee /var/log/startup-script.log|logger -t startup-script -s 2>/dev/cons
 
 # You could add commands to boot your other apps here
 
+cluster_ip=$(sudo gcloud compute instances list | grep consul-cluster | head -1 | awk '{ print $4 }')
+sudo consul join $cluster_ip
 
-# Courseur custom
-echo "set docker auth"
-sh -x /usr/local/bin/docker-auth.sh
-(! [ -d /root/.docker ] && echo docker auth: NOK) || echo docker auth OK
+sudo systemctl stop docker
+sudo systemctl disable docker
 
-/opt/nomad/bin/run-nomad --client
-
-/usr/local/bin/cloud_sql_proxy -credential_file=/root/key_staging.json -dir=/cloudsql -instances=courseur-staging:europe-west2:staging-mysql &
-
-
+/opt/traefik/bin/run-traefik --domain "${domain}"

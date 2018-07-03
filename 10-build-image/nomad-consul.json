@@ -64,7 +64,7 @@
                 "mkdir /tmp/terraform-google-nomad",
                 "tar zxvf /tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz -C /tmp/terraform-google-nomad",
                 "/tmp/terraform-google-nomad/modules/install-nomad/install-nomad --version {{user `nomad_version`}}"
-           ],
+            ],
             "pause_before": "30s"
         },
         {
@@ -126,6 +126,22 @@
             "inline": ["sudo mv /tmp/docker-auth.sh /usr/local/bin"]
         },
         {
+            "type": "file",
+            "source": "key_staging.json",
+            "destination": "/tmp/key_staging.json"
+        },
+        {
+            "type": "shell",
+            "inline": ["sudo mv /tmp/key_staging.json /root"]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy",
+                "sudo chmod +x /usr/local/bin/cloud_sql_proxy"
+            ]
+        },
+        {
             "type": "shell",
             "inline": [
                 "sudo systemctl enable apt-daily.service",
@@ -141,7 +157,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v2",
+            "image_name": "hashistack-courseur-v8",
             "type": "googlecompute"
         }
     ],
@@ -155,7 +171,7 @@
         "traefik_version": "v1.6.3",
 
         "vault_module_version": "v0.0.4",
-        "consul_module_version": "v0.0.9",
+        "consul_module_version": "v0.2",
         "nomad_module_version": "v0.2",
 
         "gruntwork_installer_version": "v0.0.21",

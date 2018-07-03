@@ -17,7 +17,7 @@ variable "gcp_region" {
 
 variable "cluster_name" {
   description = "The name of the Consul cluster (e.g. consul-stage). This variable is used to namespace all resources created by this module."
-  default = "consul-cluster"
+  default = "traefik-cluster"
 }
 
 variable "cluster_tag_name" {
@@ -46,12 +46,12 @@ variable "cluster_size" {
 }
 
 data "google_compute_image" "hashistack" {
-  name    = "hashistack-courseur-v8"
+  name    = "hashistack-courseur-v7"
 }
 
 variable "source_image" {
   description = "The source image used to create the boot disk for a Consul Server node. Only images based on Ubuntu 16.04 LTS are supported at this time."
-  default = "hashistack-courseur-v8"
+  default = "hashistack-courseur-v7"
 }
 
 variable "consul_server_cluster_name" {
@@ -61,7 +61,7 @@ variable "consul_server_cluster_name" {
 
 variable "consul_client_cluster_name" {
   description = "The name of the Consul Client example cluster. All resources will be namespaced by this value. E.g. consul-client-example"
-  default = "consul-clients"
+  default = "traefik-cluster"
 }
 
 variable "consul_server_cluster_tag_name" {
@@ -71,18 +71,19 @@ variable "consul_server_cluster_tag_name" {
 
 variable "consul_client_cluster_tag_name" {
   description = "A tag that will uniquely identify the Consul Clients. In this example, the Consul Server cluster uses this tag to identify the Consul Client servers that should have query permissions."
-  default = "consul-clients"
+  default = "consul-cluster"
 }
 
 variable "consul_server_source_image" {
   description = "The Google Image used to launch each node in the Consul Server cluster."
-  default = "hashistack-courseur-v8"
+  default = "hashistack-courseur-v7"
   # default = "$${data.google_compute_image.hashistack.self_link}"
 }
 
 variable "consul_client_source_image" {
   description = "The Google Image used to launch each node in the Consul Client cluster."
-  default = "$"
+  default = "hashistack-courseur-v7"
+  # default = "$"
 }
 
 
@@ -114,13 +115,13 @@ variable "network_name" {
 
 variable "subnetwork_name" {
   description = "The name of the VPC Subnetwork where all resources should be created. Defaults to the default subnetwork for the network and region."
-  default = "priv"
+  default = "pub"
 }
 
 variable "custom_tags" {
   description = "A list of tags that will be added to the Compute Instance Template in addition to the tags automatically added by this module."
   type = "list"
-  default = []
+  default = ["consul-cluster", "traefik"]
 }
 
 variable "update_strategy" {
@@ -216,3 +217,7 @@ variable "root_volume_disk_type" {
 variable "email_account" {
   default = "courseur-staging@courseur-staging.iam.gserviceaccount.com"
 }
+variable "domain" {
+  default = "cloud.courseur.com"
+}
+
