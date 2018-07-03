@@ -1,5 +1,0 @@
-
-
-
-* TODO ecrire le terraform pour le lb traefik
-  pour le moment a la mano
