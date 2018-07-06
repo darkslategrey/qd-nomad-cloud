@@ -25,25 +25,3 @@ Plateform).
   The intermediate CA cert is in  /home/greg/.acme.sh/cloud.courseur.com/ca.cer 
   And the full chain certs is there:  /home/greg/.acme.sh/cloud.courseur.com/fullchain.cer 
 ```
-  
-  
-Application Name
-
-gcp
-
-Application Description
-
-Google cloud
-
-Application Key
-
-FJ8Q0Xety5PqY2Tk
-
-Application Secret
-
-k7hGycBzjoFPNwLs1pTvuid4b1rAv2Fq
-
-
-  
-
-
