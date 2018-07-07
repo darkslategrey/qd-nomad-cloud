@@ -1,3 +1,5 @@
+# TODO: use this to terraform an external LB
+
 output "instance_group_manager" {
   # value = "${module.consul_clients.cluster_name}"
   value = "${module.consul_clients.instance_group_url}"
@@ -8,4 +10,9 @@ output "instance_group_manager" {
 }
 # output "bastion_ip" {
 #   value = "${google_compute_address.bastion.address}"
+# }
+
+
+# output "redis_disk" {
+#   value = "${google_compute_disk.redis_disk.self_link}"
 # }

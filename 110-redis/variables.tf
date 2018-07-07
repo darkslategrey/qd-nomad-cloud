@@ -17,7 +17,7 @@ variable "gcp_region" {
 
 variable "cluster_name" {
   description = "The name of the Consul cluster (e.g. consul-stage). This variable is used to namespace all resources created by this module."
-  default = "traefik-cluster"
+  default = "redis-cluster"
 }
 
 variable "cluster_tag_name" {
@@ -54,6 +54,17 @@ variable "source_image" {
   default = "hashistack-courseur-v7"
 }
 
+variable "labels" {
+  type = "map"
+  default = {
+    node_type = "redis"
+  }
+}
+
+# variable "persistent_disk" {
+#   default = "redis-disk-1"
+# }
+
 variable "consul_server_cluster_name" {
   description = "The name of the Consul Server cluster. All resources will be namespaced by this value. E.g. consul-server-prod"
   default = "consul-cluster"
@@ -61,7 +72,7 @@ variable "consul_server_cluster_name" {
 
 variable "consul_client_cluster_name" {
   description = "The name of the Consul Client example cluster. All resources will be namespaced by this value. E.g. consul-client-example"
-  default = "traefik-cluster"
+  default = "redis-cluster"
 }
 
 variable "consul_server_cluster_tag_name" {
@@ -115,13 +126,13 @@ variable "network_name" {
 
 variable "subnetwork_name" {
   description = "The name of the VPC Subnetwork where all resources should be created. Defaults to the default subnetwork for the network and region."
-  default = "pub"
+  default = "priv"
 }
 
 variable "custom_tags" {
   description = "A list of tags that will be added to the Compute Instance Template in addition to the tags automatically added by this module."
   type = "list"
-  default = ["consul-cluster", "traefik"]
+  default = ["consul-cluster", "redis"]
 }
 
 variable "update_strategy" {
