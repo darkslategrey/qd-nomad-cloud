@@ -24,5 +24,5 @@ sudo consul join $cluster_ip
 
 
 
-sudo gluster peer probe gfs-cluster.service.consul
-sudo  mount -t glusterfs gfs-cluster.service.consul:/redis /mnt
+sudo gluster peer probe gluster.service.consul
+sudo  mount -t glusterfs gluster.service.consul:/redis /mnt
