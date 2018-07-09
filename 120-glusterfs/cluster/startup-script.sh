@@ -2,6 +2,11 @@
 
 
 exec > >(tee /var/log/startup-script.log|logger -t startup-script -s 2>/dev/console) 2>&1
+sudo systemctl stop docker
+sudo systemctl disable docker
+
+echo 'consul ALL=(ALL) NOPASSWD: /usr/sbin/gluster pool list' > /tmp/100-consul
+sudo mv /tmp/100-consul /etc/sudoers.d
 
 /opt/consul/bin/run-consul --client --cluster-tag-name consul-cluster
 
