@@ -21,6 +21,10 @@ do
      --machine-type=${MACHINE_TYPE} \
      --can-ip-forward --tags ${SERVER},${SERVER}-${i} \
      --disk name=${DISK}1-${i} \
+     --image hashistack-courseur-v12 \
+     --image-project courseur-staging \
+     --service-account courseur-staging@courseur-staging.iam.gserviceaccount.com \
+     --metadata-from-file startup-script=startup-script.sh \
      --network-interface network=${NETWORK},subnet=${SUBNET} \
      --scopes compute-rw,logging-write,monitoring-write,sql,storage-full # ,useraccounts-rw
 
@@ -74,6 +78,8 @@ do
     #             --destination-range ${STATIC_IP[$i-1]}/32
     # echo " "
 done
+
+./probe_cluster.sh
 
 echo " "
 echo "Configure the trusted pool ..."
