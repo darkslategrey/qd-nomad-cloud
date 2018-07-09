@@ -175,7 +175,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v12",
+            "image_name": "hashistack-courseur-v13",
             "type": "googlecompute"
         }
     ],
@@ -189,7 +189,7 @@
         "traefik_version": "v1.6.3",
 
         "vault_module_version": "v0.0.4",
-        "consul_module_version": "v0.2",
+        "consul_module_version": "v0.4",
         "nomad_module_version": "v0.2",
 
         "gruntwork_installer_version": "v0.0.21",
