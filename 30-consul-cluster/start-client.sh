@@ -27,3 +27,5 @@ sh -x /usr/local/bin/docker-auth.sh
 
 sudo systemctl stop glusterfs-server
 sudo systemctl disable glusterfs-server
+
+sudo  mount -t glusterfs gluster.service.consul:/redis /mnt
