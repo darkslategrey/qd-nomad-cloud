@@ -64,10 +64,10 @@ do
      gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get update"
      echo " "
      
-     # Install GlusterFS server
-     echo "Install GlusterFS server"
-     gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get install glusterfs-server"
-     echo " "
+     # # Install GlusterFS server
+     # echo "Install GlusterFS server"
+     # gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get install glusterfs-server"
+     # echo " "
 
      # Set internal static IP route
      # Create the route for VM's static IP
