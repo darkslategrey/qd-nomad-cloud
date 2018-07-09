@@ -21,7 +21,7 @@ do
      --machine-type=${MACHINE_TYPE} \
      --can-ip-forward --tags ${SERVER},${SERVER}-${i} \
      --disk name=${DISK}1-${i} \
-     --image hashistack-courseur-v12 \
+     --image hashistack-courseur-v13 \
      --image-project courseur-staging \
      --service-account courseur-staging@courseur-staging.iam.gserviceaccount.com \
      --metadata-from-file startup-script=startup-script.sh \
