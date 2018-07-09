@@ -178,7 +178,9 @@ variable "metadata_key_name_for_cluster_size" {
 variable "custom_metadata" {
   description = "A map of metadata key value pairs to assign to the Compute Instance metadata."
   type = "map"
-  default = {}
+  default = {
+    node_type = "redis"
+  }
 }
 
 # Firewall Ports
