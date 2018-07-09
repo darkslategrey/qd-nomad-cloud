@@ -1,1 +1,1 @@
-/home/greg/devops/infra/terraform-google-consul
+../terraform-google-consul/modules/consul-cluster/

@@ -179,7 +179,7 @@ variable "custom_metadata" {
   description = "A map of metadata key value pairs to assign to the Compute Instance metadata."
   type = "map"
   default = {
-    node_type = "redis"
+    node_type = "consul-clients"
   }
 }
 
