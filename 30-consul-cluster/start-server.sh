@@ -14,3 +14,6 @@ exec > >(tee /var/log/startup-script.log|logger -t startup-script -s 2>/dev/cons
 
 # Courseur custom add
 /opt/nomad/bin/run-nomad --server --num-servers "${cluster_size}"
+
+sudo systemctl stop docker
+sudo systemctl disable docker

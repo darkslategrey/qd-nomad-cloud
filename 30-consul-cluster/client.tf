@@ -34,6 +34,14 @@ module "consul_clients" {
   network_name = "${var.network_name}"
   subnetwork_name = "${var.subnetwork_name}"
   email_account = "${var.email_account}"
+
+  rolling_update_policy_type =  "${var.rolling_update_policy_type}"
+  rolling_update_policy_minimal_action =  "${var.rolling_update_policy_minimal_action}"
+  rolling_update_policy_max_surge_fixed =  "${var.rolling_update_policy_max_surge_fixed}"
+  # rolling_update_policy_max_surge_percent =  "${var.rolling_update_policy_max_surge_percent}"
+  rolling_update_policy_max_unavailable_fixed =  "${var.rolling_update_policy_max_unavailable_fixed}"
+  # rolling_update_policy_max_unavailable_percent =  "${var.rolling_update_policy_max_unavailable_percent}"
+  rolling_update_policy_min_ready_sec =  "${var.rolling_update_policy_min_ready_sec}"
 }
 
 # Render the Startup Script that will run on each Consul Server Instance on boot.
