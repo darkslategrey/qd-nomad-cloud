@@ -10,3 +10,9 @@ ${private_key}
 EOF
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_rsa
+
+sudo systemctl stop docker
+sudo systemctl disable docker
+
+sudo systemctl stop glusterfs-server
+sudo systemctl disable glusterfs-server

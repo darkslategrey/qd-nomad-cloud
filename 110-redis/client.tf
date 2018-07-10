@@ -1,14 +1,25 @@
+# resource "google_compute_disk" "redis_disk" {
+#   count  = "0"
+#   name  = "redis-disk-${count.index+1}"
+#   type  = "pd-standard"
+#   zone  = "${var.gcp_zone}"
+#   labels {
+#     node_type = "redis"
+#   }
+#   size = 10
+# }
+
 module "consul_clients" {
   # When using these modules in your own templates, you will need to use a Git URL with a ref attribute that pins you
   # to a specific version of the modules, such as the following example:
   # source = "git::git@github.com:gruntwork-io/consul-gcp-module.git//modules/consul-cluster?ref=v0.0.1"
-  source = "./module/modules/consul-cluster"
+  source = "./consul-cluster"
 
   gcp_zone = "${var.gcp_zone}"
   gcp_region = "${var.gcp_region}"
 
   cluster_name = "${var.consul_client_cluster_name}"
-  cluster_description = "Consul Clients cluster"
+  cluster_description = "Redis Cluster"
   cluster_size = "${var.consul_client_cluster_size}"
   cluster_tag_name = "${var.consul_client_cluster_tag_name}"
   startup_script = "${data.template_file.startup_script_client.rendered}"
@@ -19,9 +30,9 @@ module "consul_clients" {
   allowed_inbound_cidr_blocks_dns = []
   allowed_inbound_tags_dns = []
 
-  machine_type = "g1-small"
+  machine_type = "${var.machine_type}"
   root_volume_disk_type = "pd-standard"
-  root_volume_disk_size_gb = "15"
+  root_volume_disk_size_gb = "10"
 
   assign_public_ip_addresses = true
 
@@ -29,28 +40,19 @@ module "consul_clients" {
   source_image = "${data.google_compute_image.hashistack.self_link}" 
   # Our Consul Clients are completely stateless, so we are free to destroy and re-create them as needed.
   instance_group_update_strategy = "${var.instance_group_update_strategy}"
-  
+
+  # persistent_disk = "${var.persistent_disk}"
 
   network_name = "${var.network_name}"
   subnetwork_name = "${var.subnetwork_name}"
   email_account = "${var.email_account}"
-
-  rolling_update_policy_type =  "${var.rolling_update_policy_type}"
-  rolling_update_policy_minimal_action =  "${var.rolling_update_policy_minimal_action}"
-  rolling_update_policy_max_surge_fixed =  "${var.rolling_update_policy_max_surge_fixed}"
-  # rolling_update_policy_max_surge_percent =  "${var.rolling_update_policy_max_surge_percent}"
-  rolling_update_policy_max_unavailable_fixed =  "${var.rolling_update_policy_max_unavailable_fixed}"
-  # rolling_update_policy_max_unavailable_percent =  "${var.rolling_update_policy_max_unavailable_percent}"
-  rolling_update_policy_min_ready_sec =  "${var.rolling_update_policy_min_ready_sec}"
+  labels = "${var.labels}"
 }
 
 # Render the Startup Script that will run on each Consul Server Instance on boot.
 # This script will configure and start Consul.
 data "template_file" "startup_script_client" {
   template = "${file("${path.module}/start-client.sh")}"
-  # template = "${file("start-client.sh")}"
-  # template = "start-client.sh"
-  # ${file("${path.module}/start-client.sh")}"
 
   vars {
     cluster_tag_name = "${var.cluster_tag_name}"

@@ -1,0 +1,37 @@
+# Google Cloud settings
+# project
+PROJECT=courseur-staging
+
+# your cluster region and zones
+REGION=europe-west1
+ZONES=(b c)
+#
+
+# Cluster servers
+SERVER=gfs-server
+
+# internal static IPs
+# STATIC_IP=(10.244.231.10 10.244.232.10 10.244.233.10)
+STATIC_IP=(172.27.3.140 172.27.3.141)
+
+# persistent disks
+DISK=gfs-brick
+SIZE=20GB
+
+# VM type
+MACHINE_TYPE=g1-small
+
+# DISK type (local-ssd pd-ssd pd-standard)
+DISK_TYPE=pd-standard
+
+# image
+IMAGE=$(gcloud compute images list | grep -v grep | grep ubuntu-1604 | awk {'print $1'} | tail -1)
+
+# count
+COUNT=2
+
+SPACE=" "
+
+
+NETWORK=nomad
+SUBNET=priv

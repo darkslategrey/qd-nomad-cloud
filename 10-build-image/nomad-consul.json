@@ -110,11 +110,20 @@
             "inline": [
                 "sudo apt-get update",
                 "sudo apt-get install -y docker-ce",
-                "sudo apt-get install -y git"
+                "sudo apt-get install -y git glusterfs-server"
             ],
             "type": "shell",
             "pause_before": "10s"
 
+        },
+        {
+            "type": "file",
+            "source": "glusterfs-consul.json",
+            "destination": "/tmp/glusterfs-consul.json.inactive"
+        },
+        {
+            "type": "shell",
+            "inline": ["sudo mv /tmp/glusterfs-consul.json.inactive /opt/consul/config"]
         },
         {
             "type": "file",
@@ -148,6 +157,15 @@
                 "sudo systemctl enable apt-daily.timer",
                 "sudo systemctl daemon-reload"
             ]
+        },
+        {
+            "type": "shell",
+            "inline":[
+                "curl -sSO https://dl.google.com/cloudagents/install-monitoring-agent.sh",
+                "sudo bash install-monitoring-agent.sh",
+                "curl -sSO https://dl.google.com/cloudagents/install-logging-agent.sh",
+                "sudo bash install-logging-agent.sh"
+            ]
         }
     ],
     "builders": [
@@ -157,7 +175,7 @@
             "source_image_family": "ubuntu-1604-lts",
             "project_id": "{{user `project_id`}}",
             "image_family": "ubuntu-1604-lts",
-            "image_name": "hashistack-courseur-v9",
+            "image_name": "hashistack-courseur-v13",
             "type": "googlecompute"
         }
     ],
@@ -171,7 +189,7 @@
         "traefik_version": "v1.6.3",
 
         "vault_module_version": "v0.0.4",
-        "consul_module_version": "v0.2",
+        "consul_module_version": "v0.4",
         "nomad_module_version": "v0.2",
 
         "gruntwork_installer_version": "v0.0.21",
