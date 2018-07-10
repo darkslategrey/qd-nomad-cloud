@@ -41,7 +41,7 @@ module "consul_clients" {
   # Our Consul Clients are completely stateless, so we are free to destroy and re-create them as needed.
   instance_group_update_strategy = "${var.instance_group_update_strategy}"
 
-  persistent_disk = "${var.persistent_disk}"
+  # persistent_disk = "${var.persistent_disk}"
 
   network_name = "${var.network_name}"
   subnetwork_name = "${var.subnetwork_name}"

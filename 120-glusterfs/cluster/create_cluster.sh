@@ -21,6 +21,10 @@ do
      --machine-type=${MACHINE_TYPE} \
      --can-ip-forward --tags ${SERVER},${SERVER}-${i} \
      --disk name=${DISK}1-${i} \
+     --image hashistack-courseur-v13 \
+     --image-project courseur-staging \
+     --service-account courseur-staging@courseur-staging.iam.gserviceaccount.com \
+     --metadata-from-file startup-script=startup-script.sh \
      --network-interface network=${NETWORK},subnet=${SUBNET} \
      --scopes compute-rw,logging-write,monitoring-write,sql,storage-full # ,useraccounts-rw
 
@@ -60,10 +64,10 @@ do
      gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get update"
      echo " "
      
-     # Install GlusterFS server
-     echo "Install GlusterFS server"
-     gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get install glusterfs-server"
-     echo " "
+     # # Install GlusterFS server
+     # echo "Install GlusterFS server"
+     # gcloud compute ssh --zone ${REGION}-${ZONES[$i-1]} ${SERVER}-${i} --command "yes | sudo apt-get install glusterfs-server"
+     # echo " "
 
      # Set internal static IP route
      # Create the route for VM's static IP
@@ -74,6 +78,8 @@ do
     #             --destination-range ${STATIC_IP[$i-1]}/32
     # echo " "
 done
+
+./probe_cluster.sh
 
 echo " "
 echo "Configure the trusted pool ..."

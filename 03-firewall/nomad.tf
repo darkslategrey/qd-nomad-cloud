@@ -24,10 +24,10 @@ resource "google_compute_firewall" "nomad-clients" {
 
   allow {
     protocol = "tcp"
-    ports    = ["4646-4647"]
+    ports    = ["4646-4647", "3000"]
   }
 
-  source_tags   = ["consul-cluster"]
+  source_tags   = ["consul-cluster", "bastion"]
   target_tags   = ["nomad-clients", "consul-clients"]
 }
 

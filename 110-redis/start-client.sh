@@ -12,7 +12,11 @@ exec > >(tee /var/log/startup-script.log|logger -t startup-script -s 2>/dev/cons
 # These variables are passed in via Terraform template interplation
 /opt/consul/bin/run-consul --client --cluster-tag-name "${cluster_tag_name}"
 
-# You could add commands to boot your other apps here
-
 cluster_ip=$(sudo gcloud compute instances list | grep consul-cluster | head -1 | awk '{ print $4 }')
+
 sudo consul join $cluster_ip
+
+/opt/nomad/bin/run-nomad --client
+
+# sudo gluster peer probe gluster.service.consul
+sudo  mount -t glusterfs gluster.service.consul:/redis /mnt

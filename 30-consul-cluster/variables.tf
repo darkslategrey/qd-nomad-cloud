@@ -27,7 +27,7 @@ variable "cluster_tag_name" {
 
 variable "machine_type" {
   description = "The machine type of the Compute Instance to run for each node in the cluster (e.g. n1-standard-1)."
-  default = "f1-micro"
+  default = "g1-small"
 }
 
 variable "consul_server_cluster_size" {
@@ -46,12 +46,12 @@ variable "cluster_size" {
 }
 
 data "google_compute_image" "hashistack" {
-  name    = "hashistack-courseur-v8"
+  name    = "hashistack-courseur-v13"
 }
 
 variable "source_image" {
   description = "The source image used to create the boot disk for a Consul Server node. Only images based on Ubuntu 16.04 LTS are supported at this time."
-  default = "hashistack-courseur-v8"
+  default = "hashistack-courseur-v13"
 }
 
 variable "consul_server_cluster_name" {
@@ -76,7 +76,7 @@ variable "consul_client_cluster_tag_name" {
 
 variable "consul_server_source_image" {
   description = "The Google Image used to launch each node in the Consul Server cluster."
-  default = "hashistack-courseur-v8"
+  default = "hashistack-courseur-v13"
   # default = "$${data.google_compute_image.hashistack.self_link}"
 }
 
@@ -120,40 +120,44 @@ variable "subnetwork_name" {
 variable "custom_tags" {
   description = "A list of tags that will be added to the Compute Instance Template in addition to the tags automatically added by this module."
   type = "list"
-  default = []
+  default = ["consul-cluster"]
 }
 
 variable "update_strategy" {
-  default = "NONE"
+  default = "ROLLING_UPDATE"
 }
 
 variable "instance_group_update_strategy" {
   description = "The update strategy to be used by the Instance Group. IMPORTANT! When you update almost any cluster setting, under the hood, this module creates a new Instance Group Template. Once that Instance Group Template is created, the value of this variable determines how the new Template will be rolled out across the Instance Group. Unfortunately, as of August 2017, Google only supports the options 'RESTART' (instantly restart all Compute Instances and launch new ones from the new Template) or 'NONE' (do nothing; updates should be handled manually). Google does offer a rolling updates feature that perfectly meets our needs, but this is in Alpha (https://goo.gl/MC3mfc). Therefore, until this module supports a built-in rolling update strategy, we recommend using `NONE` and using the alpha rolling updates strategy to roll out new Consul versions. As an alpha feature, be sure you are comfortable with the level of risk you are taking on. For additional detail, see https://goo.gl/hGH6dd."
-  default = "NONE"
+  # default = "RESTART"
+  default = "ROLLING_UPDATE"
 }
+
 
 variable "allowed_inbound_cidr_blocks_http_api" {
   description = "A list of CIDR-formatted IP address ranges from which the Compute Instances will allow API connections to Consul."
   type = "list"
-  default = ["0.0.0.0/0"]
+  # default = ["0.0.0.0/0"]
+  default = []
 }
 
 variable "allowed_inbound_tags_http_api" {
   description = "A list of tags from which the Compute Instances will allow API connections to Consul."
   type = "list"
-  default = []
+  default = ["consul-cluster", "bastion"]
 }
 
 variable "allowed_inbound_cidr_blocks_dns" {
   description = "A list of CIDR-formatted IP address ranges from which the Compute Instances will allow TCP DNS and UDP DNS connections to Consul."
   type = "list"
-  default = ["0.0.0.0/0"]
+  # default = ["0.0.0.0/0"]
+  default = []
 }
 
 variable "allowed_inbound_tags_dns" {
   description = "A list of tags from which the Compute Instances will allow TCP DNS and UDP DNS connections to Consul."
   type = "list"
-  default = []
+  default = ["consul-cluster", "bastion"]
 }
 
 # Metadata
@@ -215,4 +219,39 @@ variable "root_volume_disk_type" {
 
 variable "email_account" {
   default = "courseur-staging@courseur-staging.iam.gserviceaccount.com"
+}
+
+variable "rolling_update_policy_type" {
+    description = "The type of update. Valid values are 'OPPORTUNISTIC', 'PROACTIVE'"
+    default     = "PROACTIVE"
+}
+
+variable "rolling_update_policy_minimal_action" {
+    description = "Minimal action to be taken on an instance. Valid values are 'RESTART', 'REPLACE'"
+    default     = "REPLACE"
+}
+
+variable "rolling_update_policy_max_surge_fixed" {
+    description = "The maximum number of instances that can be created above the specified targetSize during the update process. Conflicts with max_surge_percent. If neither is set, defaults to 1"
+    default     = "1"
+}
+
+variable "rolling_update_policy_max_surge_percent" {
+    description = "The maximum number of instances(calculated as percentage) that can be created above the specified targetSize during the update process. Conflicts with max_surge_fixed."
+    default     = "20"
+}
+
+variable "rolling_update_policy_max_unavailable_fixed" {
+    description = "The maximum number of instances that can be unavailable during the update process. Conflicts with max_unavailable_percent. If neither is set, defaults to 1"
+    default     = "1"
+}
+
+variable "rolling_update_policy_max_unavailable_percent" {
+    description = "The maximum number of instances(calculated as percentage) that can be unavailable during the update process. Conflicts with max_unavailable_fixed."
+    default     = "20"
+}
+
+variable "rolling_update_policy_min_ready_sec" {
+    description = "Minimum number of seconds to wait for after a newly created instance becomes available. This value must be from range [0, 3600]"
+    default     = "50"
 }

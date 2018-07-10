@@ -22,6 +22,10 @@ sh -x /usr/local/bin/docker-auth.sh
 
 /opt/nomad/bin/run-nomad --client
 
-/usr/local/bin/cloud_sql_proxy -credential_file=/root/key_staging.json -dir=/cloudsql -instances=courseur-staging:europe-west2:staging-mysql &
+sudo /usr/local/bin/cloud_sql_proxy -credential_file=/root/key_staging.json -dir=/cloudsql -instances=courseur-staging:europe-west2:staging-mysql &
 
 
+sudo systemctl stop glusterfs-server
+sudo systemctl disable glusterfs-server
+
+sudo  mount -t glusterfs gluster.service.consul:/redis /mnt
