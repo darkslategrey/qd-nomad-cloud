@@ -56,3 +56,19 @@ data "template_file" "startup_script_client" {
     cluster_tag_name = "${var.cluster_tag_name}"
   }
 }
+
+resource "google_compute_region_autoscaler" "consul-client-scaler" {
+  name   = "consul-client-autoscaler"
+  region = "europe-west1"
+  target = "${module.consul_clients.instance_group_url}"
+
+  autoscaling_policy = {
+    max_replicas    = 5
+    min_replicas    = 2
+    cooldown_period = 60
+
+    cpu_utilization {
+      target = 0.7
+    }
+  }
+}
