@@ -4,7 +4,7 @@ Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
 ### Vue d'ensemble
 
-![ne prendre en compte que la partie droite du schema](https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png "vue d'ensemble")
+![https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png "vue d'ensemble"](ne prendre en compte que la partie droite du schema)
 
 ### Les outils
 
