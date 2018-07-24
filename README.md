@@ -4,12 +4,11 @@ Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
 ### Vue d'ensemble
 
-(https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png)[https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png]
-
+![ne prendre en compte que la partie droite du schema](https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png "vue d'ensemble")
 
 ### Les outils
 
-- La stack Hashicrop
+- La stack Hashicorp
 
 ### Prerequis
 
