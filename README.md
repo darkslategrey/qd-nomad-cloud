@@ -4,7 +4,11 @@ Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
 ### Vue d'ensemble
 
-![https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png "vue d'ensemble"](ne prendre en compte que la partie droite du schema)
+Ne prendre en compte que la partie droite du schema.
+
+Il n'a pas non plus de load balancer interne.
+
+https://bitbucket.org/courseur/infra/src/master/pres/images/Multi-cloud-step03.png
 
 ### Les outils
 
@@ -48,9 +52,9 @@ Et relier l'ip static `traefik` au front de ce load balancer.
 
 #### acme.sh (https certificates)
 
-- (https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api)[https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api]
+- https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api
 
-- (https://github.com/Neilpang/acme.sh)[https://github.com/Neilpang/acme.sh]
+- https://github.com/Neilpang/acme.sh)[https://github.com/Neilpang/acme.sh
 
 #### Automatique: Pas reussit a faire fonctionner
 
