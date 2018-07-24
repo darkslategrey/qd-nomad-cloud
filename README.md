@@ -42,12 +42,12 @@ $ cd *build* && ./build.sh && cd ..
 # L'ordre est import
 ``$ for step in network firewall bastion consul mysql treafik glusterfs \
 do \
-   cd *$step* terraform init && terraform apply -auto-approve && cd .. \
+   cd *$step* && terraform init && terraform apply -auto-approve && cd .. \
 done
 $
 ```
 
-### A la mano (via l'api ou via le web)
+##### A la mano (via l'api ou via le web)
 
 
 Creer le load balancer `https` vers le group d'instances traefik. 
@@ -55,6 +55,22 @@ Creer le load balancer `https` vers le group d'instances traefik.
 Ajouter les certifs des domaines ci-apres generes.
 
 Et relier l'ip static `traefik` au front de ce load balancer.
+
+### Destruction
+
+##### A la mano (via l'api ou via le web)
+
+En premier virer le load balancer autrement, il empeche la suppression des
+groupes d'instances.
+
+```
+# L'ordre est import
+``$ for step in glusterfs treafik mysql consul bastion firewall network \
+do \
+   cd *$step* && terraform init && terraform destroy -auto-approve && cd .. \
+done
+$
+```
 
 ### Les certificats 
 
