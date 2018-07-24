@@ -6,9 +6,17 @@ Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
 Parmis https://www.google.fr/search?source=hp&q=nomad%20gcp
 
-Je me suis beaucoup inspire de la serie d'articles https://blog.wescale.fr/2017/07/31/saga-de-lete-e01-construction-dune-infrastructure-multi-cloud/
+Je me suis beaucoup inspire de :
 
-Le code est dispo dans le projet infra.
+- la serie d'articles
+  https://blog.wescale.fr/2017/07/31/saga-de-lete-e01-construction-dune-infrastructure-multi-cloud/
+  
+  Le code est dispo dans le projet infra
+
+- en plus concit en anglais
+  https://blog.codecentric.de/en/2017/11/microservices-nomad-consul/
+
+
 
 ### Vue d'ensemble
 
