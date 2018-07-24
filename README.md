@@ -1,4 +1,4 @@
-# GCP Courseur staging
+ GCP Courseur staging
 
 Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
@@ -31,7 +31,8 @@ $ cd *build* && ./build.sh && cd ..
 # L'ordre est import
 ``$ for step in network firewall bastion consul mysql treafik glusterfs \
 do \
-cd *$step* terraform init && terraform apply -auto-approve && cd ..
+   cd *$step* terraform init && terraform apply -auto-approve && cd .. \
+done
 $
 ```
 
