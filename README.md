@@ -36,8 +36,16 @@ done
 $
 ```
 
-### Les certificats
+### A la mano (via l'api ou via le web)
 
+
+Creer le load balancer `https` vers le group d'instances traefik. 
+
+Ajouter les certifs des domaines ci-apres generes.
+
+Et relier l'ip static `traefik` au front de ce load balancer.
+
+### Les certificats 
 
 #### acme.sh (https certificates)
 
