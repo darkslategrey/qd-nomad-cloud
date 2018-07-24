@@ -63,6 +63,10 @@ Et relier l'ip static `traefik` au front de ce load balancer.
 En premier virer le load balancer autrement, il empeche la suppression des
 groupes d'instances.
 
+##### Automatique
+
+Si crendentials corrects devrait vider le projet
+
 ```
 # L'ordre est import
 ``$ for step in glusterfs treafik mysql consul bastion firewall network \
