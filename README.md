@@ -2,6 +2,14 @@
 
 Construit un cluster nomad / consul / traefik / glusterfs / mysql
 
+### References
+
+Parmis https://www.google.fr/search?source=hp&q=nomad%20gcp
+
+Je me suis beaucoup inspire de la serie d'articles https://blog.wescale.fr/2017/07/31/saga-de-lete-e01-construction-dune-infrastructure-multi-cloud/
+
+Le code est dispo dans le projet infra.
+
 ### Vue d'ensemble
 
 Ne prendre en compte que la partie droite du schema.
@@ -54,7 +62,7 @@ Et relier l'ip static `traefik` au front de ce load balancer.
 
 - https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api
 
-- https://github.com/Neilpang/acme.sh)[https://github.com/Neilpang/acme.sh
+- https://github.com/Neilpang/acme.sh
 
 #### Automatique: Pas reussit a faire fonctionner
 
@@ -84,7 +92,7 @@ Will ask you to go to the authentication link.
   
 ```
 $ acme.sh
-  ```
+```
 
 Vous aurez un truc du genre :
 
