@@ -8,6 +8,8 @@ Plateform).
 * Packer (Hashicorp)
 * Terraform (Hashicorp)
 * acme.sh (https certificates)
+ref: (https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api)[https://github.com/Neilpang/acme.sh/wiki/How-to-use-OVH-domain-api]
+
   (https://github.com/Neilpang/acme.sh)[https://github.com/Neilpang/acme.sh]
   wildcard certificates with ovh :
   1/ got to https://eu.api.ovh.com/createApp/ to get app key / app secret
