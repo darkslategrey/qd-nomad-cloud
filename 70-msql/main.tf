@@ -3,12 +3,12 @@ provider "google" {
 }
 
 resource "google_sql_database_instance" "staging" {
-  name = "staging-mysql"
-  region = "europe-west2"
+  name = "staging"
+  region = "europe-west1"
   database_version = "MYSQL_5_6"
 
   settings {
-    tier = "db-f1-micro"
+    tier = "db-n1-standard-1"
     # tier = "D0"
     # database_version = "MYSQL_5_6"
   }

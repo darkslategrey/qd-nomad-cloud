@@ -19,7 +19,7 @@ module "consul_clients" {
   allowed_inbound_cidr_blocks_dns = []
   allowed_inbound_tags_dns = []
 
-  machine_type = "g1-small"
+  machine_type = "n1-highcpu-4"
   root_volume_disk_type = "pd-standard"
   root_volume_disk_size_gb = "15"
 

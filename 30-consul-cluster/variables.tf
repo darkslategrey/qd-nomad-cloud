@@ -27,7 +27,7 @@ variable "cluster_tag_name" {
 
 variable "machine_type" {
   description = "The machine type of the Compute Instance to run for each node in the cluster (e.g. n1-standard-1)."
-  default = "g1-small"
+  default = "n1-highcpu-4"
 }
 
 variable "consul_server_cluster_size" {
@@ -243,7 +243,7 @@ variable "rolling_update_policy_max_surge_percent" {
 
 variable "rolling_update_policy_max_unavailable_fixed" {
     description = "The maximum number of instances that can be unavailable during the update process. Conflicts with max_unavailable_percent. If neither is set, defaults to 1"
-    default     = "0"
+    default     = "1"
 }
 
 variable "rolling_update_policy_max_unavailable_percent" {
