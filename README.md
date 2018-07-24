@@ -71,7 +71,7 @@ Si crendentials corrects devrait vider le projet
 # L'ordre est import
 ``$ for step in glusterfs treafik mysql consul bastion firewall network \
 do \
-   cd *$step* && terraform init && terraform destroy -auto-approve && cd .. \
+   cd *$step* && terraform destroy -auto-approve && cd .. \
 done
 $
 ```
