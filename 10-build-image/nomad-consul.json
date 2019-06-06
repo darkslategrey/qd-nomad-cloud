@@ -47,7 +47,7 @@
         {
             "type": "shell-local",
             "inline": [
-                "git clone --branch {{user `nomad_module_version`}} git@bitbucket.org:courseur/terraform-google-nomad.git /tmp/terraform-google-nomad",
+                "git clone --branch {{user `nomad_module_version`}} git@gitlab.com:darkslategrey/terraform-google-nomad.git /tmp/terraform-google-nomad",
                 "cd /tmp/terraform-google-nomad && git archive --format tgz -o /tmp/terraform-google-nomad-{{user `nomad_module_version`}}.tgz HEAD",
                 "rm -rf /tmp/terraform-google-nomad"
             ]
@@ -70,7 +70,7 @@
         {
             "type": "shell-local",
             "inline": [
-                "git clone --branch {{user `consul_module_version`}} git@bitbucket.org:courseur/terraform-google-consul.git /tmp/terraform-google-consul",
+                "git clone --branch {{user `consul_module_version`}} git@gitlab.com:darkslategrey/terraform-google-consul.git /tmp/terraform-google-consul",
                 "cd /tmp/terraform-google-consul && git archive --format tgz -o /tmp/terraform-google-consul-{{user `consul_module_version`}}.tgz HEAD",
                 "rm -rf /tmp/terraform-google-consul"
             ]
@@ -210,10 +210,10 @@
         "zone": "europe-west4-b",
         "project_id": "{{env `GOOGLE_PROJECT`}}",
 
-        "vault_version": "0.10.1",
-        "consul_version": "1.1.0",
+        "vault_version": "0.10.4",
+        "consul_version": "1.2.2",
         "nomad_version": "0.8.4",
-        "traefik_version": "v1.6.3",
+        "traefik_version": "v1.6.6",
 
         "vault_module_version": "v0.0.4",
         "consul_module_version": "v0.6",
@@ -222,7 +222,7 @@
         "gruntwork_installer_version": "v0.0.21",
         "bash_commons_version": "v0.0.3",
 
-        "service_account": "courseur-staging@courseur-staging.iam.gserviceaccount.com",
+        "service_account": "281269528285-compute@developer.gserviceaccount.com",
         "image_bucket": "eu.artifacts.courseur-staging.appspot.com"
     },
     "min_packer_version": "1.0.4"
