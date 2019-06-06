@@ -4,3 +4,6 @@
 [submodule "terraform-google-lb-http"]
 	path = terraform-google-lb-http
 	url = git@bitbucket.org:courseur/terraform-google-lb-http.git
+[submodule "terraform-google-cloud-nat"]
+	path = terraform-google-cloud-nat
+	url = https://github.com/terraform-google-modules/terraform-google-cloud-nat
